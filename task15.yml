@@ -1,0 +1,40 @@
+# Create a playbook to restart ftp & web server & 
+# stop firewall & print the kernel version for this system.
+
+---
+
+- name: "Play1"
+  hosts: w1.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  tasks:
+          - name: "restart ftp server"
+            service:
+                      name: vsftpd
+                      state: restarted
+          - name: "restart web server"
+            service:
+                      name: httpd
+                      state: restarted
+          - name: "stop firewall"
+            service:
+                      name: firewalld
+                      state: stopped
+          - name: "kernel version"
+            command:
+                      uname -r
+            register: OP
+
+          - debug: 
+                    msg: the kernel version is "{{ OP.stdout }}"
+
+# Here with debug module we can also execute (print) messages.
+#
+##### COMMANDS:
+#
+# ansible-playbook task15.yml --step = execute step-by-step based
+#                                      on user's choice
+#
+# ansible-playbook task15.yml --start-at-task="restart web server"
+# -> Start executing the playbook from the task "restart web server"

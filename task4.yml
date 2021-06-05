@@ -1,0 +1,39 @@
+#Create a playbook to configure FTP server on w1.rst.com
+#also host the FTP server Anonymous
+#NOTE: we are not adding contents to FTP server to download anything
+#we are just configuring & checking it if it is working.
+#IMP: Here Jinja2 template is used to call the variables defined {vars:} 
+#below to be called inside the various tasks.
+
+---
+
+- name: "Play4: Configration of FTP server"
+  hosts: w1.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  vars:
+          aname: vsftpd
+          sname: vsftpd
+          cfname: /etc/vsftpd/vsftpd.conf
+  tasks:
+          - name: "task1: Install Appln of FTP"
+            yum:
+                   name: "{{ aname }}"
+                   state: latest
+          - name: "task2: Backup old configuration"
+            command:
+                       mv /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.samp
+          - name: "task3: Making changes in the config file of FTP"
+            copy:
+                    content: "listen=yes"
+                    dest: "{{ cfname }}"
+          - name: "task4: Start & Enable the FTP service"
+            service:
+                       name: "{{ sname }}"
+                       state: started
+                       enabled: yes  
+  
+
+
+      

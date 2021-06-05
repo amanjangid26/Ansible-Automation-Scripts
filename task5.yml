@@ -1,0 +1,77 @@
+# Create a playbook to start FTP server & configure Firewall (install
+# necessary services = ftp ssh) to have access to the ftp server created
+# at the same time, also browse the website and download the 
+# content from the website at w2.rst.com
+#
+# Here vars.yml file acts a value file for the variables defined here
+# (ftp_app, ftp_srv, .......)
+#
+# never defined variables in ftp-app = this is wrong
+# always defined variables in ftp_app = this is right
+
+
+
+---
+
+- name: "Play1: Configure FTP server and Firewall"
+  hosts: w2.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  vars_files: 
+                 vars.yml
+  tasks:
+          - name: "task1: Install ftp appln"
+            yum:
+                    name: "{{ ftp_app }}"
+                    state: latest
+          - name: "task2: Backup Old Config"
+            command:
+                      mv /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.sample
+          - name: "task3: Copy New Config"
+            copy:
+                    content: "listen=yes"
+                    dest: /etc/vsftpd/vsftpd.conf
+          - name: "task4: start the ftp service"
+            service:
+                      name: "{{ ftp_srv }}"
+                      state: started
+                      enabled: yes
+          - name: "task5: install firewall service if not present"
+            yum:
+                    name: "{{ fw_app }}"
+                    state: latest
+          - name: "task6: Start the Firewall service"
+            service:
+                       name: "{{ fw_srv }}"
+                       state: started
+                       enabled: yes
+          - name: "task7: configure firewall table & allow ftp rule"
+            firewalld:
+                        service: "{{ rule_1 }}"
+                        immediate: true
+                        permanent: true
+                        state: enabled
+            firewalld:
+                        service: "{{ rule_2 }}"
+                        immediate: true
+                        permanent: true
+                        state: enabled
+          - name: "task8: reload the firewall table"  
+            command:    
+                        firewall-cmd --reload
+
+- name: "Play2: Browse FTP server through website"
+  hosts: w2.rst.com
+  become: yes
+  tasks:
+          - name: "task1: browsing the ftp website"
+            get_url:
+                      url: ftp://w2.rst.com
+                      dest: /home/auser
+          - name: "task2: check the file contents"
+            command: 
+                      ls /home/auser
+            register: OUTPUT
+          - debug:
+                    var: OUTPUT  

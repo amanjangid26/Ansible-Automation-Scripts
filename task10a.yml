@@ -1,0 +1,44 @@
+# Handlers are also kind of task but it depends on the 1st task, 
+# If 1st tasks is executed then Handlers comes to perform his job.
+# NOTE: Handlers tasks name should be same as notify module name
+# (ftp service restart) defined below.
+# If there is a mismatch in both the name, the notify module will
+# not be able to contact the Handler, & because of that Handler 
+# would not run the restart task which is defined in the below script.
+#
+# We have also added a conditional loop module (when),
+# if filename == "vsftpd.conf", then only start the tasks otherwise
+# it will skip it.
+# Since here it matches, so the task is performed, & notify module
+# will then notify the Handler to perform its task of restarting the service.
+
+
+---
+
+- name: "Play1: Copy the file & notify the handler to restart the service"
+  hosts: w2.rst.com
+  remote_user: auser
+  become: true
+  become_method: sudo
+  vars:
+         filename: vsftpd.conf
+  tasks:
+          - name: "task1: Copy the ftp config file"
+            copy:
+                   src: "{{ filename }}"
+                   dest: /etc/vsftpd/vsftpd.conf
+            when:
+                   filename == "vsftpd.conf"
+            notify:
+                     ftp service restart
+
+          - name: "task2: restart httpd"
+            service:
+                      name: httpd
+                      state: restarted
+
+  handlers:
+             - name: "ftp service restart"
+               service:
+                        name: vsftpd
+                        state: restarted

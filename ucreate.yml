@@ -1,0 +1,14 @@
+---
+
+- name: "Play1: create user defined by shell"
+  hosts: webservers
+  remote_user: auser
+  become: true
+  become_method: sudo
+  vars_files:
+               u.yml
+  tasks:
+          - name: "task1: create user"
+            user:
+                   name: "{{ make_user }}"
+                   state: present

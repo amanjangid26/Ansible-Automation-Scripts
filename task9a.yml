@@ -1,0 +1,22 @@
+# Create a playbook based on condition defined or not:
+# In this case, a condition is defined ( when: filename is defined)
+# so since the variable is defined above this a true statement
+# & it perform the copy task.
+
+---
+
+- name: "Play1: Copy the file when it meets the comparison"
+  hosts: "w2.rst.com"
+  remote_user: "auser"
+  become: yes
+  become_method: sudo
+  vars: 
+         filename: vsftpd.err
+  tasks:
+          - name: "task1: copy the file when matched"
+            copy:
+                   src: "{{ filename }}"
+                   dest: /usr/local/bin
+            when:
+                   filename is defined
+

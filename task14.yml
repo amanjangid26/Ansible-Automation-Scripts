@@ -1,0 +1,25 @@
+# create a playbook for Parallelism means tasks are executed
+# on targets based on the no. defined at serial module or at
+# the forks parameter at ansible.cfg file.
+
+---
+
+- name: "Play1: restarting ftp & web server"
+  hosts: webservers,servers2
+  remote_user: auser
+  become: true
+  become_method: sudo
+  serial: 2
+  tasks:
+          - name: "restart ftp server"
+            service:
+                      name: vsftp
+                      state: restarted
+            ignore_errors: yes
+
+          - name: "restart http server"
+            service:
+                      name: httpd
+                      state: restarted
+            ignore_errors: yes
+

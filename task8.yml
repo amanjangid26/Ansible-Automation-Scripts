@@ -1,0 +1,25 @@
+# Create a playbook to create multiple users using the loop module.
+ 
+# NOTE: Here (item) acts as the variable for the loop module
+# that is called below, the (item) variable is not going to change
+# it will remain the same when you use loop module always.
+# item: w2u1
+# item: w2u2
+# item: w2u3
+
+---
+
+- name: "Play1: Creating multiple users at the same time"
+  hosts: w2.rst.com
+  remote_user: auser
+  become: true
+  become_method: sudo
+  tasks:
+          - name: "task1: Creating multiple users using loop module"
+            user:
+                   name: "{{ item }}"
+                   state: present
+            loop:
+                   - w2u1
+                   - w2u2
+                   - w2u3  

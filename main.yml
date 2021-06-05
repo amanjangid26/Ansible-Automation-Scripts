@@ -1,0 +1,14 @@
+# create a playbook to import the task from another file
+#
+# here we have created another task file (mariadb-task.yml)
+# which is imported in this YAML file.
+
+---
+
+- name: "Play1: Install & starting MariaDB MySQL Database"
+  hosts: w1.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  tasks:
+          - import_tasks: mariadb-task.yml

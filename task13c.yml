@@ -1,0 +1,23 @@
+# Create a playbook for project management of hosts.
+
+
+---
+
+- name: "Play1: restarting ftp & web server"
+  hosts: webservers,&servers2
+  remote_user: auser
+  become: true
+  become_method: sudo
+  tasks:
+          - name: "restart ftp server"
+            service:
+                      name: vsftp
+                      state: restarted
+            ignore_errors: yes
+
+          - name: "restart http server"
+            service:
+                      name: httpd
+                      state: restarted
+            ignore_errors: yes
+

@@ -1,0 +1,13 @@
+# Task File for main.yml & anothermain.yml
+
+- name: "task1: install mariadb-server"
+  yum:
+        name: mariadb-server
+        state: latest
+- name: "task2: start mariadb-service"
+  service:
+            name: mariadb
+            state: started
+            enabled: true
+
+

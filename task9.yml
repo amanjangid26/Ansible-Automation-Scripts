@@ -1,0 +1,23 @@
+# NOTE: Don't forget to write " " to vsftpd.conf otherwise
+# if you don't write it ansible will take that (.) as an argument
+# since we have written "vsftpd.conf" that is why, ansible 
+# is taking it as a string.
+
+
+---
+
+- name: "Play1: Copy the file when it meets the comparison"
+  hosts: "w2.rst.com"
+  remote_user: "auser"
+  become: yes
+  become_method: sudo
+  vars_files:
+               file.yml
+  tasks:
+          - name: "task1: copy the file when matched"
+            copy:
+                   src: "{{ filename }}"
+                   dest: /usr/local/bin
+            when:
+                   filename == "vsftpd.conf"
+

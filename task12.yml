@@ -1,0 +1,27 @@
+# Create a playbook in such a way that if there are any errors
+# in the task, ignore that & continue runnging other tasks.
+#
+# So here in the service name we have written vsftp, but it is vsftpd
+# & we have also mentioned ignore_errors: yes means, if there is any error
+# in the 1st task, ignore that error, & continue running the 2nd tasks
+# & so on.
+
+---
+
+- name: "Play1: restarting ftp & web server"
+  hosts: w1.rst.com
+  remote_user: auser
+  become: true
+  become_method: sudo
+  tasks:
+          - name: "restart ftp server"
+            service:
+                      name: vsftp
+                      state: restarted
+            ignore_errors: yes
+
+          - name: "restart http server"
+            service:
+                      name: httpd
+                      state: restarted
+            ignore_errors: yes

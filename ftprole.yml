@@ -1,0 +1,8 @@
+---
+- name: "Play1: Start ftp server"
+  hosts: w2.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  roles:
+          - ftpserver

@@ -1,0 +1,22 @@
+# create a playbook to include the task from another file 
+# along with running other task (Say Hello)
+#
+# here we have created another task file (mariadb-task.yml)
+# which is included in this YAML file to run along with some 
+# other tasks mentioned at the tasks: section.
+
+
+---
+
+- name: "Play1: Print Hello, Install & starting MariaDB MySQL Database"
+  hosts: w2.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  tasks:
+          - include_tasks: 
+                            mariadb-task.yml
+          - name: "Say Hello"
+            command:
+                      echo "Hello" > /home/auser/hello.txt
+

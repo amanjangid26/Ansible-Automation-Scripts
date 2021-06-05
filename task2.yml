@@ -1,0 +1,28 @@
+# Create a playbook to create a partition & also list(monitor) the partition 
+# for /dev/nvme0n3 HDD for dns.rst.com server
+
+---
+
+- name: "play2"
+  hosts: dns.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  tasks:
+          - name: "task1: Creating partition on /dev/nvme0n3"
+            parted:
+                     device: /dev/nvme0n3 
+                     part_type: primary
+                     number: 2
+                     part_start: 5GB
+                     part_end: 11GB
+                     state: present
+          - name: "task2: List partition for /dev/nvme0n3"
+            parted:
+                     device: /dev/nvme0n3
+                     state: info
+                     unit: GB
+            register: OUTPUT
+          - debug:
+                    var: OUTPUT
+            

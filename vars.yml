@@ -1,0 +1,6 @@
+ftp_app: vsftpd
+ftp_srv: vsftpd
+fw_app: firewalld
+fw_srv: firewalld
+rule_1: ftp
+rule_2: ssh

@@ -1,0 +1,25 @@
+# Create a playbook to schedule a cron job for echo "hello"
+# at 14:30 hour of everydayon w2.rst.com. 
+# Check if it scheduled or not.
+
+---
+
+- name: "Play1"
+  hosts: w2.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  tasks: 
+          - name: "Schedule Cron Job"
+            cron: 
+                   name: job1
+                   job: echo "hello"
+                   hour: 14
+                   minute: 30
+                   state: present
+          - name: "Verifying if it is schedule"
+            command:
+                      crontab -l 
+            register: OP
+          - debug: 
+                    msg: The scheduled job is "{{ OP.stdout }}"

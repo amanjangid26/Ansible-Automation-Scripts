@@ -1,0 +1,29 @@
+# Write a playbook to print the partition table 
+# for the device /dev/nvme0n3 on dns.rst.com server
+
+# sudo mkdir /ascripts
+# sudo setfacl -m u:auser:rwx /ascripts
+
+# vim task1.yml
+
+---
+
+- name: "play1"
+  hosts: dns.rst.com
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  tasks:
+          - name: "task1: List Partitions in /dev/nvme0n3"
+            parted:
+                    device: /dev/nvme0n3
+                    state: info
+                    unit: GB
+            register: OUTPUT
+          - debug:
+                   var: OUTPUT
+
+
+
+# ansible-playbook task1.yml --syntax-check   =  To check the syntax of the YAML file
+# ansible-playbook task1.yml                  =  To the run the Playbook      

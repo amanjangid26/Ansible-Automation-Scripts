@@ -1,0 +1,31 @@
+# Create a Playbook to install Apache (HTTPD) on webservers
+# Copy the index.html to the webservers
+# Host the website created 
+# Stop the Firewall service permanently
+
+---
+
+- name: "Play3"
+  hosts: webservers
+  remote_user: auser
+  become: true
+  become_method: sudo
+  tasks:
+          - name: "task1: Install Apache Appln httpd"
+            yum:
+                  name: httpd
+                  state: latest
+          - name: "task2: Copying the index.html to /var/www/html/"
+            copy:
+                   src: /ascripts/index.html
+                   dest: /var/www/html/index.html
+          - name: "task3: Starting the Web appln service"
+            service:
+                      name: httpd
+                      state: started
+                      enabled: true
+          - name: "task4: Stopping firewall service"
+            service:
+                      name: firewalld
+                      state: stopped
+                      enabled: false

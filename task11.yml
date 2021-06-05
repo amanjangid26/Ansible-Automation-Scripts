@@ -1,0 +1,9 @@
+---
+
+- name: "Play1: Start password protected website"
+  hosts: webservers
+  remote_user: auser
+  become: yes
+  become_method: sudo
+  roles:
+          - webserver
